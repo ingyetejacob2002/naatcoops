@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # NAATCOOPS Cooperative Management System
 
 NAATCOOPS is a modern cooperative management web application built using Flask, PostgreSQL, and Tailwind CSS.
@@ -331,3 +332,6 @@ Developed using:
 * Tailwind CSS
 
 For Cooperative Financial Management Systems.
+=======
+# naatcoops
+>>>>>>> 6c0de2ce767d5078119f61dc262bff4586e7cdae
