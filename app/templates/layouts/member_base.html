@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Member Dashboard | NAATCOOPS
+    </title>
+
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/output.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body class="bg-gray-100 overflow-x-hidden">
+
+    <div class="flex min-h-screen">
+
+        <!-- Sidebar -->
+        {% set dashboard_url = url_for('member.dashboard') %}
+
+        {% include 'includes/sidebar.html' %}
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col">
+
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-md px-8 py-5 flex justify-between items-center">
+
+                <!-- Left Side -->
+                <div>
+
+                    <h1 class="text-3xl font-bold text-green-900">
+                        💰 NAATCOOPS Services
+                    </h1>
+
+                    <p class="text-gray-500 mt-1">
+                        Manage your savings, loans and financial activities
+                    </p>
+
+                </div>
+
+                <!-- Right Side -->
+                <div class="flex items-center gap-5">
+
+                    <!-- Announcements -->
+                    <a href="{{ url_for('member.dashboard') }}"
+                       class="relative">
+
+                        <i class="fa-solid fa-bell text-2xl text-green-900"></i>
+
+                        {% if announcements_count %}
+
+                        <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+
+                            {{ announcements_count }}
+
+                        </span>
+
+                        {% endif %}
+
+                    </a>
+
+                    <!-- User Info -->
+                    <div class="flex items-center gap-3">
+
+                        <div class="bg-green-800 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg">
+
+                            {{ current_user.full_name[0] }}
+
+                        </div>
+
+                        <div>
+
+                            <h3 class="font-semibold text-gray-800">
+                                {{ current_user.full_name }}
+                            </h3>
+
+                            <p class="text-sm text-gray-500">
+                                Cooperative Member
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+            <!-- Flash Messages -->
+            <div class="px-8 pt-6">
+
+                {% include 'includes/flash_messages.html' %}
+
+            </div>
+
+            <!-- Page Content -->
+            <main class="flex-1 p-8 overflow-y-auto">
+
+                {% block content %}
+                {% endblock %}
+
+            </main>
+
+        </div>
+
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+
+</html>

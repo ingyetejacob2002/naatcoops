@@ -1,0 +1,12 @@
+{
+  "name": "naatcoops",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tailwindcss -i ./app/static/css/input.css -o ./app/static/css/output.css"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17"
+  }
+}

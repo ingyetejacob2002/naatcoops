@@ -1,0 +1,244 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+    <!-- Sidebar -->
+    <div class="bg-green-950 text-white rounded-2xl p-6 min-h-screen">
+
+        <h2 class="text-2xl font-bold mb-10">
+            💰 Admin Panel
+        </h2>
+
+        <div class="space-y-4">
+
+            <a href="{{ url_for('admin.dashboard') }}"
+               class="block hover:text-yellow-400">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('admin.members') }}"
+               class="block hover:text-yellow-400">
+                Members
+            </a>
+
+            <a href="{{ url_for('admin.loans') }}"
+               class="block hover:text-yellow-400">
+                Loan Applications
+            </a>
+
+            <a href="{{ url_for('admin.notifications') }}"
+               class="block text-yellow-400 font-semibold">
+                Notifications
+            </a>
+
+            <a href="{{ url_for('admin.announcements') }}"
+               class="block hover:text-yellow-400">
+                Announcements
+            </a>
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="block hover:text-yellow-400">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:col-span-3 space-y-8">
+
+        <!-- Header -->
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+
+            <div class="flex justify-between items-center">
+
+                <div>
+
+                    <h1 class="text-3xl font-bold mb-2">
+                        Notifications
+                    </h1>
+
+                    <p class="text-gray-500">
+                        Monitor all cooperative activities and member requests.
+                    </p>
+
+                </div>
+
+                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-xl">
+
+                    Total Notifications:
+                    {{ pending_members|length + pending_loans|length }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Pending Member Approvals -->
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+
+            <div class="flex justify-between items-center mb-8">
+
+                <h2 class="text-2xl font-bold">
+                    Pending Member Registrations
+                </h2>
+
+                <span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-xl">
+                    {{ pending_members|length }} Pending
+                </span>
+
+            </div>
+
+            {% if pending_members %}
+
+                <div class="space-y-4">
+
+                    {% for user in pending_members %}
+
+                    <div class="border border-gray-200 rounded-2xl p-6 flex justify-between items-center">
+
+                        <div>
+
+                            <h3 class="text-xl font-semibold">
+                                {{ user.full_name }}
+                            </h3>
+
+                            <p class="text-gray-500">
+                                {{ user.email }}
+                            </p>
+
+                            <p class="text-sm text-gray-400 mt-1">
+                                PF Number: {{ user.pf_number }}
+                            </p>
+
+                        </div>
+
+                        <div>
+
+                            <a href="{{ url_for('admin.approve_member', id=user.id) }}"
+                               class="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-xl">
+
+                                Approve Member
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="text-center py-12">
+
+                    <h3 class="text-2xl text-gray-500 font-semibold">
+                        No Pending Member Registrations
+                    </h3>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <!-- Pending Loan Requests -->
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+
+            <div class="flex justify-between items-center mb-8">
+
+                <h2 class="text-2xl font-bold">
+                    Pending Loan Applications
+                </h2>
+
+                <span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-xl">
+                    {{ pending_loans|length }} Pending
+                </span>
+
+            </div>
+
+            {% if pending_loans %}
+
+                <div class="space-y-4">
+
+                    {% for loan in pending_loans %}
+
+                    <div class="border border-gray-200 rounded-2xl p-6">
+
+                        <div class="flex justify-between items-start">
+
+                            <div>
+
+                                <h3 class="text-xl font-semibold mb-2">
+                                    {{ loan.member.full_name }}
+                                </h3>
+
+                                <p class="text-gray-600 mb-2">
+                                    Requested Loan:
+                                    <span class="font-bold text-green-700">
+                                        ₦{{ "{:,.2f}".format(loan.amount) }}
+                                    </span>
+                                </p>
+
+                                <p class="text-gray-500 mb-2">
+                                    Duration:
+                                    {{ loan.duration }}
+                                </p>
+
+                                <p class="text-gray-500">
+                                    {{ loan.reason }}
+                                </p>
+
+                            </div>
+
+                            <div class="flex gap-3">
+
+                                <a href="{{ url_for('admin.approve_loan', id=loan.id) }}"
+                                   class="bg-green-700 hover:bg-green-800 text-white px-5 py-2 rounded-lg">
+
+                                    Approve
+
+                                </a>
+
+                                <a href="{{ url_for('admin.reject_loan', id=loan.id) }}"
+                                   class="bg-red-700 hover:bg-red-800 text-white px-5 py-2 rounded-lg">
+
+                                    Reject
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="text-center py-12">
+
+                    <h3 class="text-2xl text-gray-500 font-semibold">
+                        No Pending Loan Requests
+                    </h3>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,660 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Sign In{% endblock %}
+
+{% block head %}
+<style>
+  /* ── Login page overrides the default content-shell padding ── */
+  .page-content {
+    background: var(--cream);
+    min-height: calc(100vh - var(--nav-h));
+    display: flex;
+    align-items: stretch;
+  }
+
+  /* ── Two-column layout ── */
+  .login-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    min-height: calc(100vh - var(--nav-h));
+  }
+
+  /* ════════════════════════
+     LEFT PANEL — decorative
+  ════════════════════════ */
+  .login-panel {
+    position: relative;
+    background: var(--forest);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 56px 56px 48px;
+    overflow: hidden;
+  }
+
+  /* Layered glows */
+  .login-panel::before {
+    content: '';
+    position: absolute;
+    top: -120px; left: -80px;
+    width: 500px; height: 500px;
+    background: radial-gradient(ellipse, rgba(45,134,83,0.4) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .login-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; right: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.2) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  /* Grain */
+  .panel-grain {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* Decorative rings */
+  .panel-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.12);
+    pointer-events: none;
+  }
+  .panel-ring-1 { width: 480px; height: 480px; top: -100px; right: -180px; }
+  .panel-ring-2 { width: 300px; height: 300px; top: 40px;  right: -60px;  border-color: rgba(45,134,83,0.15); }
+
+  .panel-top { position: relative; z-index: 1; }
+  .panel-mid { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 40px 0; }
+  .panel-bot { position: relative; z-index: 1; }
+
+  /* Panel wordmark */
+  .panel-wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .panel-mark {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--gold) 0%, #9a6b1e 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 20px;
+    color: var(--forest);
+    box-shadow: 0 4px 16px rgba(201,168,76,0.45);
+  }
+  .panel-wordmark-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900;
+    color: #fff; letter-spacing: 0.04em;
+  }
+
+  /* Headline */
+  .panel-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 3.5vw, 48px);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .panel-headline em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .panel-sub {
+    color: rgba(255,255,255,0.55);
+    font-size: 16px;
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 340px;
+    margin-bottom: 36px;
+  }
+
+  /* Stats row on panel */
+  .panel-stats {
+    display: flex;
+    gap: 28px;
+  }
+  .pstat {
+    display: flex;
+    flex-direction: column;
+  }
+  .pstat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .pstat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.05em;
+    margin-top: 3px;
+  }
+
+  .panel-divider {
+    width: 1px; height: 32px;
+    background: rgba(255,255,255,0.12);
+    align-self: center;
+  }
+
+  /* Testimonial card */
+  .panel-testi {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px;
+    padding: 24px 28px;
+    backdrop-filter: blur(12px);
+  }
+  .panel-testi-quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+  .panel-testi-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .panel-testi-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--emerald));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: #fff;
+    border: 2px solid rgba(201,168,76,0.35);
+    flex-shrink: 0;
+  }
+  .panel-testi-name { font-size: 13px; font-weight: 600; color: #fff; }
+  .panel-testi-role { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+
+  /* ════════════════════════
+     RIGHT PANEL — form
+  ════════════════════════ */
+  .login-form-side {
+    background: var(--warm-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 48px;
+  }
+
+  .login-form-box {
+    width: 100%;
+    max-width: 420px;
+    animation: formReveal 0.6s cubic-bezier(0.23,1,0.32,1) both;
+  }
+
+  @keyframes formReveal {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Header */
+  .form-header { margin-bottom: 36px; }
+
+  .form-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 12px;
+  }
+  .form-eyebrow::before {
+    content: '';
+    width: 20px; height: 2px;
+    background: var(--gold);
+    display: block;
+  }
+
+  .form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--forest);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .form-subtitle {
+    color: var(--slate-lt);
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .form-subtitle a {
+    color: var(--green);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .form-subtitle a:hover { color: var(--emerald); }
+
+  /* Field group */
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--forest);
+    letter-spacing: 0.01em;
+  }
+
+  .input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    font-size: 16px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+  }
+
+  .field input {
+    width: 100%;
+    padding: 14px 16px 14px 46px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    background: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--slate-dk);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+  }
+
+  .field input::placeholder { color: #b0b8c4; }
+
+  .field input:hover {
+    border-color: rgba(45,134,83,0.3);
+  }
+
+  .field input:focus {
+    border-color: var(--green);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(45,134,83,0.1);
+  }
+
+  .field input:focus ~ .input-icon,
+  .input-wrap:focus-within .input-icon { opacity: 1; }
+
+  /* Password toggle */
+  .pw-toggle {
+    position: absolute;
+    right: 14px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+    padding: 4px;
+    line-height: 1;
+  }
+  .pw-toggle:hover { opacity: 0.8; }
+
+  /* Field errors */
+  .field-errors {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 2px;
+  }
+  .field-error {
+    font-size: 12px;
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .field-error::before { content: '⚠'; font-size: 11px; }
+
+  /* Extras row */
+  .form-extras {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 12px;
+  }
+
+  .remember-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--slate-lt);
+    user-select: none;
+  }
+
+  .remember-label input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--green);
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .forgot-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s;
+  }
+  .forgot-link:hover { color: var(--emerald); }
+
+  /* Submit button */
+  .btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--forest) 0%, var(--emerald) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 8px 24px rgba(14,43,26,0.3);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-submit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--green) 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .btn-submit:hover::before { opacity: 1; }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(14,43,26,0.4); }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit span { position: relative; z-index: 1; }
+
+  /* Divider */
+  .form-or {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 24px 0;
+    color: #c5cdd6;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .form-or::before, .form-or::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Register prompt */
+  .form-register-prompt {
+    text-align: center;
+    font-size: 14px;
+    color: var(--slate-lt);
+    margin-top: 24px;
+  }
+  .form-register-prompt a {
+    color: var(--green);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .form-register-prompt a:hover { color: var(--emerald); }
+
+  /* Trust badges */
+  .trust-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #b0b8c4;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+  .trust-item span { font-size: 14px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .login-wrap { grid-template-columns: 1fr; }
+    .login-panel { display: none; }
+    .login-form-side { padding: 40px 24px; min-height: calc(100vh - var(--nav-h)); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+
+  <!-- ═══ LEFT: Decorative panel ═══ -->
+  <aside class="login-panel">
+    <div class="panel-grain"></div>
+    <div class="panel-ring panel-ring-1"></div>
+    <div class="panel-ring panel-ring-2"></div>
+
+    <!-- Top wordmark -->
+    <div class="panel-top">
+      <a href="{{ url_for('auth.home') }}" class="panel-wordmark">
+        <div class="panel-mark">N</div>
+        <span class="panel-wordmark-text">NAATCOOPS</span>
+      </a>
+    </div>
+
+    <!-- Mid headline + stats -->
+    <div class="panel-mid">
+      <h2 class="panel-headline">
+        Welcome<br>
+        <em>back</em> to your<br>
+        financial hub.
+      </h2>
+
+      <p class="panel-sub">
+        Sign in to track your savings, manage loans, and
+        stay connected with your cooperative community.
+      </p>
+
+      <div class="panel-stats">
+        <div class="pstat">
+          <div class="pstat-num">500+</div>
+          <div class="pstat-label">Active Members</div>
+        </div>
+        <div class="panel-divider"></div>
+        <div class="pstat">
+          <div class="pstat-num">₦50M+</div>
+          <div class="pstat-label">Savings Managed</div>
+        </div>
+        <div class="panel-divider"></div>
+        <div class="pstat">
+          <div class="pstat-num">99%</div>
+          <div class="pstat-label">Satisfaction</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom testimonial -->
+    <div class="panel-bot">
+      <div class="panel-testi">
+        <p class="panel-testi-quote">
+          "Logging into my dashboard every morning keeps me disciplined.
+          I can see my savings grow in real time — it's motivating."
+        </p>
+        <div class="panel-testi-author">
+          <div class="panel-testi-avatar">MJ</div>
+          <div>
+            <div class="panel-testi-name">Mary James</div>
+            <div class="panel-testi-role">Member since 2020</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ RIGHT: Form ═══ -->
+  <section class="login-form-side">
+    <div class="login-form-box">
+
+      <div class="form-header">
+        <div class="form-eyebrow">Member Access</div>
+        <h1 class="form-title">Sign In</h1>
+        <p class="form-subtitle">
+          New to NAATCOOPS?
+          <a href="{{ url_for('auth.register') }}">Create a free account →</a>
+        </p>
+      </div>
+
+      <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="field-group">
+
+          <!-- Email -->
+          <div class="field">
+            {{ form.email.label }}
+            <div class="input-wrap">
+              <span class="input-icon">✉</span>
+              {{ form.email(
+                  placeholder='you@example.com',
+                  autocomplete='email',
+                  spellcheck='false'
+              ) }}
+            </div>
+            {% if form.email.errors %}
+              <div class="field-errors">
+                {% for error in form.email.errors %}
+                  <span class="field-error">{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Password -->
+          <div class="field">
+            {{ form.password.label }}
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              {{ form.password(
+                  id='passwordField',
+                  placeholder='Enter your password',
+                  autocomplete='current-password'
+              ) }}
+              <button type="button" class="pw-toggle" id="pwToggle"
+                      aria-label="Toggle password visibility">👁</button>
+            </div>
+            {% if form.password.errors %}
+              <div class="field-errors">
+                {% for error in form.password.errors %}
+                  <span class="field-error">{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+        </div>
+
+        <!-- Remember + Forgot -->
+        <div class="form-extras">
+          <label class="remember-label">
+            <input type="checkbox" name="remember"> Remember me
+          </label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <!-- Submit -->
+        {{ form.submit(
+            class='btn-submit',
+            value='Sign In to Dashboard'
+        ) }}
+
+      </form>
+
+      <!-- Register CTA -->
+      <p class="form-register-prompt">
+        Don't have an account?
+        <a href="{{ url_for('auth.register') }}">Join NAATCOOPS today</a>
+      </p>
+
+      <!-- Trust badges -->
+      <div class="trust-row">
+        <div class="trust-item"><span>🔐</span> SSL Secured</div>
+        <div class="trust-item"><span>🛡️</span> Data Protected</div>
+        <div class="trust-item"><span>✅</span> Verified Platform</div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Password show / hide
+  const pwField  = document.getElementById('passwordField');
+  const pwToggle = document.getElementById('pwToggle');
+  pwToggle?.addEventListener('click', () => {
+    const show = pwField.type === 'password';
+    pwField.type = show ? 'text' : 'password';
+    pwToggle.textContent = show ? '🙈' : '👁';
+  });
+</script>
+{% endblock %}

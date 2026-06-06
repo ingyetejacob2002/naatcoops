@@ -1,0 +1,161 @@
+<!-- Sidebar Component -->
+
+<div class="bg-green-950 text-white w-64 min-h-screen p-6 rounded-r-3xl shadow-2xl">
+
+    <!-- Logo / Title -->
+    <div class="mb-12">
+
+        <h1 class="text-3xl font-extrabold tracking-wide">
+            💰 NAATCOOPS
+        </h1>
+
+        <p class="text-sm text-gray-300 mt-2">
+            Cooperative Management System
+        </p>
+
+    </div>
+
+    <!-- Navigation -->
+    <nav class="space-y-3">
+
+        <!-- Dashboard -->
+        <a href="{{ dashboard_url }}"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-800 transition duration-300">
+
+            <span class="text-xl">📊</span>
+
+            <span class="font-medium">
+                Dashboard
+            </span>
+
+        </a>
+
+        <!-- Savings -->
+        {% if current_user.role == 'member' %}
+
+        <a href="{{ url_for('member.savings') }}"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-800 transition duration-300">
+
+            <span class="text-xl">💰</span>
+
+            <span class="font-medium">
+                Add Savings
+            </span>
+
+        </a>
+
+        <a href="{{ url_for('member.apply_loan') }}"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-800 transition duration-300">
+
+            <span class="text-xl">🏦</span>
+
+            <span class="font-medium">
+                Apply Loan
+            </span>
+
+        </a>
+
+        <a href="{{ url_for('member.dashboard') }}"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-800 transition duration-300">
+
+            <span class="text-xl">📋</span>
+
+            <span class="font-medium">
+                My Loans
+            </span>
+
+        </a>
+
+        {% endif %}
+
+        <!-- Admin Links -->
+        {% if current_user.role == 'admin' %}
+
+        <a href="{{ url_for('admin.members') }}"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-800 transition duration-300">
+
+            <span class="text-xl">👥</span>
+
+            <span class="font-medium">
+                Members
+            </span>
+
+        </a>
+
+        <a href="{{ url_for('admin.loans') }}"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-800 transition duration-300">
+
+            <span class="text-xl">🏦</span>
+
+            <span class="font-medium">
+                Loan Applications
+            </span>
+
+        </a>
+
+        <a href="{{ url_for('admin.notifications') }}"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-800 transition duration-300">
+
+            <span class="text-xl">🔔</span>
+
+            <span class="font-medium">
+                Notifications
+            </span>
+
+        </a>
+
+        <a href="{{ url_for('admin.announcements') }}"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-800 transition duration-300">
+
+            <span class="text-xl">📢</span>
+
+            <span class="font-medium">
+                Announcements
+            </span>
+
+        </a>
+
+        {% endif %}
+
+        <!-- Logout -->
+        <a href="{{ url_for('auth.logout') }}"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-700 transition duration-300 mt-10">
+
+            <span class="text-xl">🚪</span>
+
+            <span class="font-medium">
+                Logout
+            </span>
+
+        </a>
+
+    </nav>
+
+    <!-- Bottom Info -->
+    <div class="mt-16 border-t border-green-800 pt-6">
+
+        <div class="flex items-center gap-3">
+
+            <div class="bg-green-700 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold">
+
+                {{ current_user.full_name[0] }}
+
+            </div>
+
+            <div>
+
+                <h4 class="font-semibold">
+                    {{ current_user.full_name }}
+                </h4>
+
+                <p class="text-sm text-gray-300 capitalize">
+                    {{ current_user.role }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

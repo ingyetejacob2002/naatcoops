@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — NAATCOOPS</title>
+  <meta name="description" content="NAATCOOPS Member Dashboard — Savings, Loans & Financial Tracking">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --forest:      #0d2b1a;
+      --forest-mid:  #153525;
+      --emerald:     #1a5c35;
+      --green:       #2d8653;
+      --mint:        #4caf80;
+      --gold:        #c9a84c;
+      --gold-light:  #e8c97a;
+      --cream:       #f5f0e8;
+      --warm-white:  #fdfaf5;
+      --bg:          #eef2ef;
+      --slate-dk:    #1c2b38;
+      --slate-lt:    #6b7a8d;
+      --border:      rgba(14,43,26,0.09);
+      --shadow-sm:   0 2px 8px rgba(14,43,26,0.06);
+      --shadow-md:   0 8px 28px rgba(14,43,26,0.1);
+      --shadow-lg:   0 20px 56px rgba(14,43,26,0.13);
+      --nav-h:       64px;
+      --sb-w:        256px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--slate-dk);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: rgba(13,43,26,0.97);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,168,76,0.18);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px 0 0;
+      z-index: 500;
+    }
+
+    .tb-left { display: flex; align-items: center; height: 100%; gap: 0; }
+
+    .tb-brand {
+      width: var(--sb-w); height: 100%;
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 18px;
+      border-right: 1px solid rgba(255,255,255,0.07);
+      flex-shrink: 0; cursor: pointer;
+      background: none; border-top: none; border-bottom: none; border-left: none;
+      transition: background 0.2s;
+    }
+    .tb-brand:hover { background: rgba(255,255,255,0.04); }
+
+    .tb-mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold), #9a6b1e);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 17px; font-weight: 900; color: var(--forest);
+      box-shadow: 0 3px 12px rgba(201,168,76,0.4); flex-shrink: 0;
+    }
+
+    .tb-wordmark { display: flex; flex-direction: column; line-height: 1; }
+    .tb-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px; font-weight: 900; color: #fff; letter-spacing: 0.04em;
+    }
+    .tb-sub {
+      font-size: 9px; font-weight: 600; color: var(--gold-light);
+      letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px;
+    }
+
+    .tb-crumb {
+      padding: 0 20px; font-size: 12px; color: rgba(255,255,255,0.35);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .tb-crumb span { color: rgba(255,255,255,0.65); font-weight: 500; }
+
+    .tb-right { display: flex; align-items: center; gap: 8px; }
+
+    .tb-icon {
+      width: 36px; height: 36px; border-radius: 9px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; cursor: pointer; transition: all 0.2s;
+      position: relative; color: rgba(255,255,255,0.7);
+    }
+    .tb-icon:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .notif-dot {
+      position: absolute; top: 6px; right: 6px;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--gold); border: 1.5px solid rgba(13,43,26,0.97);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.35);} }
+
+    .tb-user {
+      display: flex; align-items: center; gap: 9px;
+      padding: 5px 12px 5px 5px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px; cursor: pointer; transition: background 0.2s;
+    }
+    .tb-user:hover { background: rgba(255,255,255,0.1); }
+
+    .tb-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), #9a6b1e);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 13px; font-weight: 900; color: var(--forest); flex-shrink: 0;
+    }
+    .tb-uname {
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85);
+      max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* ─── APP SHELL ─── */
+    .shell { display: flex; padding-top: var(--nav-h); min-height: 100vh; }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      width: var(--sb-w); flex-shrink: 0;
+      background: var(--forest);
+      position: fixed; top: var(--nav-h); left: 0; bottom: 0;
+      overflow-y: auto; overflow-x: hidden;
+      display: flex; flex-direction: column;
+      z-index: 400;
+      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1);
+    }
+    .sidebar::-webkit-scrollbar { width: 3px; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); }
+
+    .sidebar::after {
+      content: ''; position: absolute; bottom: -50px; right: -50px;
+      width: 230px; height: 230px;
+      background: radial-gradient(ellipse, rgba(45,134,83,0.2) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .sb-inner {
+      display: flex; flex-direction: column; height: 100%;
+      padding: 20px 0; position: relative; z-index: 1;
+    }
+
+    .sb-profile {
+      padding: 0 16px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 10px;
+    }
+
+    .sb-avatar {
+      width: 48px; height: 48px; border-radius: 13px;
+      background: linear-gradient(135deg, var(--gold), #9a6b1e);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; font-weight: 900; color: var(--forest);
+      box-shadow: 0 4px 14px rgba(201,168,76,0.35); margin-bottom: 10px;
+    }
+
+    .sb-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px; font-weight: 700; color: #fff;
+      line-height: 1.2; margin-bottom: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sb-pf {
+      font-size: 10px; color: rgba(255,255,255,0.3);
+      font-family: 'DM Mono', monospace; letter-spacing: 0.07em;
+    }
+    .sb-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 9px; padding: 3px 9px; border-radius: 100px;
+      background: rgba(76,175,128,0.12); border: 1px solid rgba(76,175,128,0.2);
+      font-size: 9px; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase; color: #9ef5c9;
+    }
+    .sb-badge::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: #4caf80; box-shadow: 0 0 5px #4caf80;
+      animation: blink 2s ease infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+    .nav-group-label {
+      padding: 4px 16px 4px;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(255,255,255,0.2);
+      margin-top: 6px;
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 10px; margin: 1px 8px; border-radius: 10px;
+      color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500;
+      transition: all 0.17s; position: relative;
+    }
+    .nav-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
+    .nav-item.active {
+      color: #fff;
+      background: rgba(201,168,76,0.11);
+      border: 1px solid rgba(201,168,76,0.18);
+    }
+    .nav-item.active::before {
+      content: ''; position: absolute; left: -8px; top: 50%;
+      transform: translateY(-50%);
+      width: 3px; height: 17px;
+      background: var(--gold); border-radius: 0 3px 3px 0;
+    }
+
+    .ni-icon {
+      width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; background: rgba(255,255,255,0.04);
+      transition: background 0.17s;
+    }
+    .nav-item:hover .ni-icon  { background: rgba(255,255,255,0.09); }
+    .nav-item.active .ni-icon { background: rgba(201,168,76,0.13); }
+
+    .ni-label { flex: 1; }
+
+    .ni-chip {
+      font-size: 9px; font-weight: 800; padding: 2px 7px;
+      border-radius: 100px; background: var(--gold); color: var(--forest);
+    }
+
+    .sb-foot {
+      margin-top: auto; padding: 12px 8px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-item.logout { color: rgba(255,100,100,0.5); }
+    .nav-item.logout:hover { color: #fca5a5; background: rgba(239,68,68,0.07); }
+    .nav-item.logout .ni-icon { background: rgba(239,68,68,0.08); }
+
+    /* ─── MAIN ─── */
+    .main {
+      flex: 1; margin-left: var(--sb-w);
+      padding: 30px 34px 64px;
+      min-width: 0;
+    }
+
+    /* ─── Page header ─── */
+    .pg-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 18px; margin-bottom: 28px; flex-wrap: wrap;
+    }
+
+    .pg-greeting { font-size: 12px; color: var(--slate-lt); font-weight: 500; margin-bottom: 3px; }
+    .pg-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px; font-weight: 900; color: var(--forest);
+      line-height: 1.1; letter-spacing: -0.01em;
+    }
+
+    .pg-actions { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+
+    .date-chip {
+      display: flex; align-items: center; gap: 7px;
+      padding: 8px 14px; background: #fff;
+      border-radius: 9px; border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      font-size: 12px; color: var(--slate-lt); font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .btn-action {
+      display: flex; align-items: center; gap: 6px;
+      padding: 9px 17px;
+      border-radius: 9px; font-size: 13px; font-weight: 700;
+      transition: all 0.2s; box-shadow: var(--shadow-sm);
+    }
+    .btn-forest {
+      background: var(--forest); color: #fff;
+    }
+    .btn-forest:hover {
+      background: var(--emerald);
+      transform: translateY(-1px); box-shadow: var(--shadow-md);
+    }
+
+    /* ─── Stat cards ─── */
+    .stat-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 16px; margin-bottom: 18px;
+    }
+
+    .stat-card {
+      background: #fff; border-radius: 15px; padding: 22px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
+      position: relative; overflow: hidden;
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+    .stat-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+    .sc-sav::after { background: linear-gradient(90deg, var(--green), var(--mint)); }
+    .sc-loan::after{ background: linear-gradient(90deg, #3b82f6, #06b6d4); }
+    .sc-star::after{ background: linear-gradient(90deg, var(--gold), #f59e0b); }
+
+    .sc-bg {
+      position: absolute; right: 12px; top: 8px;
+      font-family: 'Playfair Display', serif;
+      font-size: 68px; font-weight: 900; line-height: 1;
+      opacity: 0.03; pointer-events: none; user-select: none; color: var(--slate-dk);
+    }
+
+    .sc-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+
+    .sc-icon {
+      width: 42px; height: 42px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center; font-size: 19px;
+    }
+    .sc-sav  .sc-icon { background: rgba(45,134,83,0.1); }
+    .sc-loan .sc-icon { background: rgba(59,130,246,0.1); }
+    .sc-star .sc-icon { background: rgba(201,168,76,0.11); }
+
+    .sc-trend {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 100px;
+    }
+    .t-up   { background: #dcfce7; color: #15803d; }
+    .t-blue { background: #eff6ff; color: #1e40af; }
+    .t-gold { background: #fef9c3; color: #854d0e; }
+
+    .sc-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--slate-lt); margin-bottom: 5px;
+    }
+    .sc-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px; font-weight: 900; color: var(--forest);
+      line-height: 1; letter-spacing: -0.02em; margin-bottom: 5px;
+    }
+    .sc-sub { font-size: 11px; color: var(--slate-lt); }
+
+    /* ─── Quick actions ─── */
+    .quick-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 12px; margin-bottom: 18px;
+    }
+
+    .qcard {
+      background: #fff; border-radius: 13px; padding: 16px 10px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      transition: all 0.22s; cursor: pointer;
+    }
+    .qcard:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(45,134,83,0.2); }
+
+    .qcard-icon {
+      width: 44px; height: 44px; border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px; transition: transform 0.2s;
+    }
+    .qcard:hover .qcard-icon { transform: scale(1.08); }
+
+    .qi-green  { background: rgba(45,134,83,0.1); }
+    .qi-blue   { background: rgba(59,130,246,0.1); }
+    .qi-gold   { background: rgba(201,168,76,0.11); }
+    .qi-purple { background: rgba(139,92,246,0.1); }
+
+    .qcard-label { font-size: 11px; font-weight: 700; color: var(--forest); text-align: center; line-height: 1.3; }
+
+    /* ─── Content grid ─── */
+    .content-grid {
+      display: grid; grid-template-columns: 3fr 2fr;
+      gap: 16px; margin-bottom: 16px;
+    }
+
+    /* ─── Card ─── */
+    .card {
+      background: #fff; border-radius: 15px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden;
+    }
+
+    .card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 18px 14px;
+      border-bottom: 1px solid rgba(14,43,26,0.05);
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px; font-weight: 700; color: var(--forest);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title-icon {
+      width: 27px; height: 27px; border-radius: 7px; font-size: 12px;
+      display: flex; align-items: center; justify-content: center; background: #f0f4f2;
+    }
+    .card-action { font-size: 11px; font-weight: 700; color: var(--green); transition: color 0.2s; }
+    .card-action:hover { color: var(--emerald); }
+
+    .card-body { padding: 16px 18px; }
+
+    /* ─── Loan table ─── */
+    .loan-tbl { width: 100%; border-collapse: collapse; }
+    .loan-tbl th {
+      text-align: left; padding: 0 0 9px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase; color: #b0b8c4;
+      border-bottom: 1px solid rgba(14,43,26,0.05);
+    }
+    .loan-tbl td {
+      padding: 11px 0; border-bottom: 1px solid rgba(14,43,26,0.04);
+      font-size: 13px; color: var(--slate-dk); vertical-align: middle;
+    }
+    .loan-tbl tr:last-child td { border-bottom: none; }
+    .loan-tbl td:last-child { text-align: right; }
+
+    .loan-amt {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px; font-weight: 700; color: var(--forest);
+    }
+    .loan-dt { font-size: 10px; color: var(--slate-lt); font-family: 'DM Mono', monospace; }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: 100px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .pill::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+    .p-approved { background: #dcfce7; color: #15803d; }
+    .p-approved::before { background: #22c55e; }
+    .p-pending  { background: #fef9c3; color: #854d0e; }
+    .p-pending::before  { background: #eab308; }
+    .p-rejected { background: #fee2e2; color: #991b1b; }
+    .p-rejected::before { background: #ef4444; }
+
+    /* ─── Goal / Savings ─── */
+    .goal-block { margin-bottom: 16px; }
+    .goal-row   { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+    .goal-lbl   { font-size: 11px; font-weight: 700; color: var(--forest); }
+    .goal-vals  { font-size: 10px; color: var(--slate-lt); }
+    .goal-vals strong { color: var(--green); font-weight: 700; }
+
+    .bar-track { height: 7px; border-radius: 100px; background: #e3ebe5; overflow: hidden; margin-bottom: 3px; }
+    .bar-fill  {
+      height: 100%; border-radius: 100px;
+      background: linear-gradient(90deg, var(--green), var(--mint));
+      transition: width 1.2s cubic-bezier(0.23,1,0.32,1);
+    }
+    .goal-pct  { font-size: 10px; color: #b0b8c4; text-align: right; }
+
+    .sav-entries { display: flex; flex-direction: column; }
+    .sav-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 0; border-bottom: 1px solid rgba(14,43,26,0.04);
+    }
+    .sav-row:last-child { border-bottom: none; }
+
+    .sav-dot {
+      width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; background: rgba(45,134,83,0.07);
+    }
+    .sav-info { flex: 1; min-width: 0; }
+    .sav-desc { font-size: 12px; font-weight: 600; color: var(--forest); }
+    .sav-date { font-size: 10px; color: var(--slate-lt); margin-top: 1px; }
+    .sav-amt  {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px; font-weight: 700; color: var(--green); white-space: nowrap;
+    }
+
+    /* ─── Bottom grid ─── */
+    .bottom-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+
+    /* ─── Announcements ─── */
+    .ann-list { display: flex; flex-direction: column; gap: 9px; }
+    .ann-item {
+      display: flex; gap: 11px; align-items: flex-start;
+      padding: 12px; border-radius: 10px;
+      background: #f7faf8; border: 1px solid rgba(14,43,26,0.06);
+      transition: border-color 0.2s;
+    }
+    .ann-item:hover { border-color: rgba(45,134,83,0.18); }
+    .ann-dot {
+      width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; background: rgba(201,168,76,0.09);
+    }
+    .ann-title { font-size: 12px; font-weight: 700; color: var(--forest); margin-bottom: 2px; }
+    .ann-body  { font-size: 11px; color: var(--slate-lt); line-height: 1.55; }
+    .ann-dt    { font-size: 9px; color: #c0c8d0; margin-top: 4px; font-family: 'DM Mono', monospace; }
+
+    /* ─── Mini chart ─── */
+    .chart-wrap { display: flex; flex-direction: column; height: 100%; }
+    .chart-bars {
+      flex: 1; display: flex; align-items: flex-end; gap: 7px;
+      padding: 4px 2px; min-height: 110px;
+    }
+    .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .bar-col {
+      width: 100%; border-radius: 5px 5px 0 0;
+      cursor: pointer; transition: filter 0.2s;
+    }
+    .bar-col:hover { filter: brightness(1.12); }
+    .bar-col.b-cur  { background: linear-gradient(180deg, var(--mint), var(--green)); }
+    .bar-col.b-past { background: rgba(45,134,83,0.16); }
+    .bar-mo {
+      font-size: 9px; font-weight: 600; color: var(--slate-lt);
+      font-family: 'DM Mono', monospace; text-align: center;
+    }
+    .bar-mo.b-cur-mo { color: var(--green); font-weight: 700; }
+
+    .chart-legend {
+      display: flex; gap: 12px; margin-top: 12px; padding-top: 10px;
+      border-top: 1px solid rgba(14,43,26,0.05);
+    }
+    .leg-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--slate-lt); }
+    .leg-dot  { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* ─── Empty state ─── */
+    .empty {
+      text-align: center; padding: 24px 14px;
+    }
+    .empty-ico { font-size: 32px; margin-bottom: 9px; opacity: 0.4; }
+    .empty p   { font-size: 12px; color: var(--slate-lt); line-height: 1.65; }
+    .empty a   { color: var(--green); font-weight: 600; }
+
+    /* ─── Flash messages ─── */
+    .flash-zone { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+    .flash {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 14px; border-radius: 10px;
+      font-size: 13px; font-weight: 500;
+      animation: fIn .4s cubic-bezier(0.23,1,0.32,1) both;
+    }
+    @keyframes fIn { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
+    .flash-success { background: #edf7f1; border: 1px solid #a7dcc0; color: #1a5c35; }
+    .flash-error   { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
+    .flash-warning { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+    .flash-info    { background: #eff6ff; border: 1px solid #93c5fd; color: #1e40af; }
+    .flash-close {
+      margin-left: auto; background: none; border: none; cursor: pointer;
+      opacity: .4; font-size: 15px; transition: opacity .2s; color: inherit;
+    }
+    .flash-close:hover { opacity: 1; }
+
+    /* ─── Mobile ─── */
+    .mob-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 390;
+      backdrop-filter: blur(3px);
+    }
+    .fab {
+      display: none; position: fixed; bottom: 18px; right: 18px;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--forest); border: none; cursor: pointer;
+      z-index: 600; font-size: 20px; color: #fff;
+      box-shadow: 0 8px 24px rgba(14,43,26,0.4);
+      align-items: center; justify-content: center; transition: background .2s;
+    }
+
+    @media (max-width: 1120px) {
+      .stat-grid    { grid-template-columns: 1fr 1fr; }
+      .content-grid { grid-template-columns: 1fr; }
+      .bottom-grid  { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .quick-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); z-index: 490; }
+      .sidebar.sb-open { transform: translateX(0); }
+      .mob-overlay.sb-open { display: block; }
+      .fab { display: flex; }
+      .tb-brand { width: auto; border-right: none; }
+      .tb-sub, .tb-crumb { display: none; }
+      .main { margin-left: 0; padding: 18px 12px 72px; }
+      .stat-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═════════════ TOPBAR ═════════════ -->
+<header class="topbar">
+  <div class="tb-left">
+    <button class="tb-brand" id="sidebarToggle" aria-label="Toggle sidebar">
+      <div class="tb-mark">N</div>
+      <div class="tb-wordmark">
+        <span class="tb-name">NAATCOOPS</span>
+        <span class="tb-sub">Member Portal</span>
+      </div>
+    </button>
+    <div class="tb-crumb">/ <span>Dashboard</span></div>
+  </div>
+
+  <div class="tb-right">
+    <div class="tb-icon" title="Notifications">
+      🔔 <span class="notif-dot"></span>
+    </div>
+    <div class="tb-icon" title="Settings">⚙️</div>
+    <div class="tb-user">
+      <div class="tb-avatar">
+        {{ current_user.full_name[0]|upper if current_user.full_name else 'M' }}
+      </div>
+      <span class="tb-uname">{{ current_user.full_name or 'Member' }}</span>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <!-- ═════════════ SIDEBAR ═════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-inner">
+
+      <div class="sb-profile">
+        <div class="sb-avatar">
+          {{ current_user.full_name[0]|upper if current_user.full_name else 'M' }}
+        </div>
+        <div class="sb-name">{{ current_user.full_name or 'Member' }}</div>
+        <div class="sb-pf">{{ current_user.pf_number or 'PF-00000' }}</div>
+        <div class="sb-badge">Active Member</div>
+      </div>
+
+      <div class="nav-group-label">Main Menu</div>
+
+      <a href="{{ url_for('member.dashboard') }}"
+         class="nav-item {% if request.endpoint == 'member.dashboard' %}active{% endif %}">
+        <div class="ni-icon">🏠</div>
+        <span class="ni-label">Dashboard</span>
+      </a>
+
+      <a href="{{ url_for('member.savings') }}"
+         class="nav-item {% if request.endpoint == 'member.savings' %}active{% endif %}">
+        <div class="ni-icon">💰</div>
+        <span class="ni-label">My Savings</span>
+      </a>
+
+      <a href="{{ url_for('member.apply_loan') }}"
+         class="nav-item {% if request.endpoint == 'member.apply_loan' %}active{% endif %}">
+        <div class="ni-icon">🏦</div>
+        <span class="ni-label">Apply for Loan</span>
+        {% if loans | selectattr('status','equalto','pending') | list | length > 0 %}
+          <span class="ni-chip">
+            {{ loans | selectattr('status','equalto','pending') | list | length }}
+          </span>
+        {% endif %}
+      </a>
+
+      <div class="nav-group-label" style="margin-top:10px;">Account</div>
+
+      <a href="#" class="nav-item"><div class="ni-icon">👤</div><span class="ni-label">My Profile</span></a>
+      <a href="#" class="nav-item"><div class="ni-icon">📢</div><span class="ni-label">Announcements</span></a>
+      <a href="#" class="nav-item"><div class="ni-icon">📊</div><span class="ni-label">Statements</span></a>
+
+      <div class="sb-foot">
+        <a href="{{ url_for('auth.logout') }}" class="nav-item logout">
+          <div class="ni-icon">🚪</div>
+          <span class="ni-label">Sign Out</span>
+        </a>
+      </div>
+
+    </div>
+  </aside>
+
+  <div class="mob-overlay" id="mobOverlay"></div>
+  <button class="fab" id="fabBtn" aria-label="Open menu">☰</button>
+
+  <!-- ═════════════ MAIN ═════════════ -->
+  <main class="main">
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-zone">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">
+              <span>{% if category=='success'%}✅{% elif category in ['error','danger']%}❌{% elif category=='warning'%}⚠️{% else %}ℹ️{% endif %}</span>
+              <span>{{ message }}</span>
+              <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Page header -->
+    <div class="pg-header">
+      <div>
+        <div class="pg-greeting" id="greeting">Good day 👋</div>
+        <h1 class="pg-title">
+          Welcome back, {{ current_user.full_name.split()[0] if current_user.full_name else 'Member' }}
+        </h1>
+      </div>
+      <div class="pg-actions">
+        <div class="date-chip">📅 <span id="liveDate">—</span></div>
+        <a href="{{ url_for('member.savings') }}" class="btn-action btn-forest">➕ Add Savings</a>
+      </div>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="stat-grid">
+
+      <div class="stat-card sc-sav">
+        <div class="sc-bg">₦</div>
+        <div class="sc-row">
+          <div class="sc-icon">💰</div>
+          <div class="sc-trend t-up">↑ Growing</div>
+        </div>
+        <div class="sc-label">Total Savings</div>
+        <div class="sc-value">₦{{ "{:,.0f}".format(total_savings) }}</div>
+        <div class="sc-sub">Cumulative deposits to date</div>
+      </div>
+
+      <div class="stat-card sc-loan">
+        <div class="sc-bg">{{ loans | selectattr('status','equalto','approved') | list | length }}</div>
+        <div class="sc-row">
+          <div class="sc-icon">🏦</div>
+          <div class="sc-trend t-blue">{{ loans | length }} total</div>
+        </div>
+        <div class="sc-label">Active Loans</div>
+        <div class="sc-value">{{ loans | selectattr('status','equalto','approved') | list | length }}</div>
+        <div class="sc-sub">
+          {% set pc = loans | selectattr('status','equalto','pending') | list | length %}
+          {% if pc > 0 %}{{ pc }} pending approval{% else %}No pending applications{% endif %}
+        </div>
+      </div>
+
+      <div class="stat-card sc-star">
+        <div class="sc-bg">★</div>
+        <div class="sc-row">
+          <div class="sc-icon">⭐</div>
+          <div class="sc-trend t-gold">✓ Verified</div>
+        </div>
+        <div class="sc-label">Member Status</div>
+        <div class="sc-value" style="font-size:18px;line-height:1.3;">Good Standing</div>
+        <div class="sc-sub">Fully approved cooperative member</div>
+      </div>
+
+    </div>
+
+    <!-- Quick actions -->
+    <div class="quick-grid">
+      <a href="{{ url_for('member.savings') }}" class="qcard">
+        <div class="qcard-icon qi-green">➕</div>
+        <div class="qcard-label">Add Savings</div>
+      </a>
+      <a href="{{ url_for('member.apply_loan') }}" class="qcard">
+        <div class="qcard-icon qi-blue">📋</div>
+        <div class="qcard-label">Apply for Loan</div>
+      </a>
+      <a href="#" class="qcard">
+        <div class="qcard-icon qi-gold">📊</div>
+        <div class="qcard-label">View Statement</div>
+      </a>
+      <a href="#" class="qcard">
+        <div class="qcard-icon qi-purple">📢</div>
+        <div class="qcard-label">Announcements</div>
+      </a>
+    </div>
+
+    <!-- Content grid -->
+    <div class="content-grid">
+
+      <!-- Loans -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <div class="card-title-icon">🏦</div>Your Loans
+          </div>
+          <a href="{{ url_for('member.apply_loan') }}" class="card-action">Apply New →</a>
+        </div>
+        <div class="card-body">
+          {% if loans %}
+            <table class="loan-tbl">
+              <thead>
+                <tr>
+                  <th>Amount</th><th>Status</th>
+                  <th style="text-align:right;">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for loan in loans %}
+                <tr>
+                  <td><div class="loan-amt">₦{{ "{:,.2f}".format(loan.amount) }}</div></td>
+                  <td>
+                    <span class="pill p-{{ loan.status|lower }}">{{ loan.status|capitalize }}</span>
+                  </td>
+                  <td>
+                    <div class="loan-dt">
+                      {{ loan.date_applied.strftime('%d %b %Y') if loan.date_applied else '—' }}
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <div class="empty">
+              <div class="empty-ico">🏦</div>
+              <p>No loans on record yet.<br>
+                <a href="{{ url_for('member.apply_loan') }}">Apply for your first loan →</a>
+              </p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Savings overview -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <div class="card-title-icon">💰</div>Savings Overview
+          </div>
+          <a href="{{ url_for('member.savings') }}" class="card-action">Add More →</a>
+        </div>
+        <div class="card-body">
+          {% set goal = 500000 %}
+          {% set pct  = [(total_savings / goal * 100), 100] | min %}
+
+          <div class="goal-block">
+            <div class="goal-row">
+              <span class="goal-lbl">Savings Goal</span>
+              <span class="goal-vals">
+                <strong>₦{{ "{:,.0f}".format(total_savings) }}</strong> / ₦500k
+              </span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:{{ pct }}%;"></div>
+            </div>
+            <div class="goal-pct">{{ "%.1f"|format(pct) }}% of goal</div>
+          </div>
+
+          {% if savings_history is defined and savings_history %}
+            <div class="sav-entries">
+              {% for entry in savings_history[:4] %}
+              <div class="sav-row">
+                <div class="sav-dot">💵</div>
+                <div class="sav-info">
+                  <div class="sav-desc">Monthly contribution</div>
+                  <div class="sav-date">{{ entry.date.strftime('%d %b %Y') if entry.date else '—' }}</div>
+                </div>
+                <div class="sav-amt">+₦{{ "{:,.2f}".format(entry.amount) }}</div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="empty" style="padding:14px 0 0;">
+              <div class="empty-ico">💵</div>
+              <p>No entries yet.<br>
+                <a href="{{ url_for('member.savings') }}">Make your first deposit →</a>
+              </p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom grid -->
+    <div class="bottom-grid">
+
+      <!-- Announcements -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <div class="card-title-icon">📢</div>Announcements
+          </div>
+          <a href="#" class="card-action">View All →</a>
+        </div>
+        <div class="card-body">
+          {% if announcements is defined and announcements %}
+            <div class="ann-list">
+              {% for ann in announcements[:3] %}
+              <div class="ann-item">
+                <div class="ann-dot">📣</div>
+                <div>
+                  <div class="ann-title">{{ ann.title }}</div>
+                  <div class="ann-body">{{ ann.body|truncate(110) }}</div>
+                  <div class="ann-dt">{{ ann.date.strftime('%d %b %Y') if ann.date else '' }}</div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="ann-list">
+              <div class="ann-item">
+                <div class="ann-dot">📣</div>
+                <div>
+                  <div class="ann-title">Welcome to NAATCOOPS Member Portal</div>
+                  <div class="ann-body">Your dashboard is live. Use the quick actions to add savings or apply for a loan.</div>
+                  <div class="ann-dt" id="annD1"></div>
+                </div>
+              </div>
+              <div class="ann-item">
+                <div class="ann-dot">ℹ️</div>
+                <div>
+                  <div class="ann-title">Loan Applications Open</div>
+                  <div class="ann-body">Members in good standing may apply for cooperative loans. Subject to board review.</div>
+                  <div class="ann-dt" id="annD2"></div>
+                </div>
+              </div>
+              <div class="ann-item">
+                <div class="ann-dot">🎯</div>
+                <div>
+                  <div class="ann-title">Monthly Savings Reminder</div>
+                  <div class="ann-body">Ensure your monthly contribution is up to date to maintain your good standing.</div>
+                  <div class="ann-dt" id="annD3"></div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Mini chart -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <div class="card-title-icon">📈</div>Savings Trend
+          </div>
+        </div>
+        <div class="card-body chart-wrap">
+          <div class="chart-bars" id="chartBars"></div>
+          <div class="chart-legend">
+            <div class="leg-item"><div class="leg-dot" style="background:var(--green);"></div>Current</div>
+            <div class="leg-item"><div class="leg-dot" style="background:rgba(45,134,83,0.2);"></div>Previous</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<script>
+  /* Date & greeting */
+  const now  = new Date();
+  const hr   = now.getHours();
+  const fmtL = new Intl.DateTimeFormat('en-NG', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
+  const fmtS = new Intl.DateTimeFormat('en-NG', { day:'numeric', month:'short', year:'numeric' });
+
+  document.getElementById('liveDate').textContent = fmtL.format(now);
+  ['annD1','annD2','annD3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = fmtS.format(now);
+  });
+
+  const greetEl = document.getElementById('greeting');
+  if (greetEl) {
+    greetEl.textContent = hr < 12 ? 'Good morning 🌅' : hr < 17 ? 'Good afternoon ☀️' : 'Good evening 🌙';
+  }
+
+  /* Sidebar toggle */
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('mobOverlay');
+  const fabBtn   = document.getElementById('fabBtn');
+  const sbToggle = document.getElementById('sidebarToggle');
+
+  const openSb  = () => { sidebar.classList.add('sb-open'); overlay.classList.add('sb-open'); if(fabBtn) fabBtn.textContent='✕'; };
+  const closeSb = () => { sidebar.classList.remove('sb-open'); overlay.classList.remove('sb-open'); if(fabBtn) fabBtn.textContent='☰'; };
+  const toggleSb = () => sidebar.classList.contains('sb-open') ? closeSb() : openSb();
+
+  sbToggle?.addEventListener('click', toggleSb);
+  fabBtn?.addEventListener('click', toggleSb);
+  overlay?.addEventListener('click', closeSb);
+
+  /* Progress bar animate */
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.bar-fill').forEach(b => {
+      const t = b.style.width; b.style.width='0%';
+      requestAnimationFrame(() => setTimeout(() => b.style.width = t, 130));
+    });
+  });
+
+  /* Flash auto-dismiss */
+  document.querySelectorAll('.flash').forEach((f, i) => {
+    setTimeout(() => {
+      f.style.transition='opacity .4s,transform .4s';
+      f.style.opacity='0'; f.style.transform='translateY(-8px)';
+      setTimeout(()=>f.remove(), 400);
+    }, 5000 + i*500);
+  });
+
+  /* Mini bar chart */
+  const months   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const curMo    = now.getMonth();
+  const chartMos = [];
+  for (let i=5; i>=0; i--) chartMos.push((curMo - i + 12) % 12);
+  const heights  = [32, 48, 42, 58, 68, 84];
+  const chartEl  = document.getElementById('chartBars');
+
+  if (chartEl) {
+    chartMos.forEach((mi, idx) => {
+      const isCur = idx === chartMos.length - 1;
+      const g     = document.createElement('div');
+      g.className = 'bar-group';
+      const bar   = document.createElement('div');
+      bar.className = `bar-col ${isCur ? 'b-cur' : 'b-past'}`;
+      bar.style.height = '0px';
+      bar.dataset.h = heights[idx] + 'px';
+      bar.title = months[mi];
+      const lbl = document.createElement('div');
+      lbl.className = `bar-mo ${isCur ? 'b-cur-mo' : ''}`;
+      lbl.textContent = months[mi];
+      g.appendChild(bar);
+      g.appendChild(lbl);
+      chartEl.appendChild(g);
+    });
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        chartEl.querySelectorAll('.bar-col').forEach((bar, i) => {
+          setTimeout(() => { bar.style.height = bar.dataset.h; }, i * 90);
+        });
+      }, 250);
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+<div class="bg-green-950 text-white rounded-2xl p-6 h-screen">
+
+<h2 class="text-2xl font-bold mb-10">
+Admin Panel
+</h2>
+
+<div class="space-y-4">
+
+<a href="#" class="block">Dashboard</a>
+<a href="#pending">Pending Members</a>
+<a href="#loans">Loans</a>
+<a href="#announcement">Announcements</a>
+<a href="{{ url_for('auth.logout') }}">Logout</a>
+
+</div>
+
+</div>
+
+<div class="md:col-span-3 space-y-10">
+
+<div class="bg-white rounded-2xl shadow p-8" id="pending">
+<h2 class="text-2xl font-bold mb-6">
+Pending Members
+</h2>
+
+<table class="w-full">
+
+<tr class="border-b">
+<th class="py-3 text-left">Name</th>
+<th class="py-3 text-left">Action</th>
+</tr>
+
+{% for user in pending_members %}
+<tr class="border-b">
+<td class="py-3">{{ user.full_name }}</td>
+<td class="py-3">
+<a href="{{ url_for('admin.approve_member', id=user.id) }}"
+class="bg-green-700 text-white px-4 py-2 rounded-lg">
+Approve
+</a>
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+<div class="bg-white rounded-2xl shadow p-8" id="loans">
+<h2 class="text-2xl font-bold mb-6">Loan Applications</h2>
+
+<table class="w-full">
+
+<tr class="border-b">
+<th class="py-3 text-left">Member</th>
+<th class="py-3 text-left">Amount</th>
+<th class="py-3 text-left">Status</th>
+<th class="py-3 text-left">Action</th>
+</tr>
+
+{% for loan in loans %}
+<tr class="border-b">
+<td class="py-3">{{ loan.member.full_name }}</td>
+<td class="py-3">₦{{ loan.amount }}</td>
+<td class="py-3">{{ loan.status }}</td>
+<td class="py-3 space-x-2">
+
+<a href="{{ url_for('admin.approve_loan', id=loan.id) }}"
+class="bg-green-700 text-white px-4 py-2 rounded-lg">
+Approve
+</a>
+<a href="{{ url_for('admin.reject_loan', id=loan.id) }}"
+class="bg-red-700 text-white px-4 py-2 rounded-lg">
+Reject
+</a>
+
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+<div class="bg-white rounded-2xl shadow p-8" id="announcement">
+
+<h2 class="text-2xl font-bold mb-6">
+Add Announcement
+</h2>
+
+<form method="POST" action="{{ url_for('admin.add_announcement') }}">
+
+<input type="text"
+       name="title"
+       placeholder="Title"
+       class="w-full border p-3 rounded-lg mb-4">
+<textarea name="message"
+          placeholder="Announcement"
+          class="w-full border p-3 rounded-lg h-40 mb-4"></textarea>
+
+<button class="bg-green-700 text-white px-6 py-3 rounded-lg">
+Post Announcement
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,237 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+    <!-- Sidebar -->
+    <div class="bg-green-950 text-white rounded-2xl p-6 min-h-screen">
+
+        <h2 class="text-2xl font-bold mb-10">
+            💰 Admin Panel
+        </h2>
+
+        <div class="space-y-4">
+
+            <a href="{{ url_for('admin.dashboard') }}"
+               class="block hover:text-yellow-400">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('admin.members') }}"
+               class="block hover:text-yellow-400">
+                Members
+            </a>
+
+            <a href="{{ url_for('admin.loans') }}"
+               class="block text-yellow-400 font-semibold">
+                Loan Applications
+            </a>
+
+            <a href="{{ url_for('admin.announcements') }}"
+               class="block hover:text-yellow-400">
+                Announcements
+            </a>
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="block hover:text-yellow-400">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:col-span-3">
+
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+
+            <div class="flex justify-between items-center mb-8">
+
+                <h2 class="text-3xl font-bold">
+                    Loan Applications
+                </h2>
+
+                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-xl">
+                    Total Loans: {{ loans|length }}
+                </div>
+
+            </div>
+
+            {% if loans %}
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full border-collapse">
+
+                    <thead>
+
+                        <tr class="bg-green-900 text-white">
+
+                            <th class="p-4 text-left">
+                                Member
+                            </th>
+
+                            <th class="p-4 text-left">
+                                Amount
+                            </th>
+
+                            <th class="p-4 text-left">
+                                Duration
+                            </th>
+
+                            <th class="p-4 text-left">
+                                Reason
+                            </th>
+
+                            <th class="p-4 text-left">
+                                Status
+                            </th>
+
+                            <th class="p-4 text-left">
+                                Date
+                            </th>
+
+                            <th class="p-4 text-left">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for loan in loans %}
+
+                        <tr class="border-b hover:bg-gray-50">
+
+                            <!-- Member -->
+                            <td class="p-4">
+                                <div>
+
+                                    <h4 class="font-semibold">
+                                        {{ loan.member.full_name }}
+                                    </h4>
+
+                                    <p class="text-sm text-gray-500">
+                                        {{ loan.member.email }}
+                                    </p>
+
+                                </div>
+                            </td>
+
+                            <!-- Amount -->
+                            <td class="p-4 font-semibold text-green-700">
+                                ₦{{ "{:,.2f}".format(loan.amount) }}
+                            </td>
+
+                            <!-- Duration -->
+                            <td class="p-4">
+                                {{ loan.duration }}
+                            </td>
+
+                            <!-- Reason -->
+                            <td class="p-4">
+                                <div class="max-w-xs truncate">
+                                    {{ loan.reason }}
+                                </div>
+                            </td>
+
+                            <!-- Status -->
+                            <td class="p-4">
+
+                                {% if loan.status == 'Pending' %}
+
+                                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">
+                                        Pending
+                                    </span>
+
+                                {% elif loan.status == 'Approved' %}
+
+                                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                                        Approved
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">
+                                        Rejected
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- Date -->
+                            <td class="p-4 text-sm text-gray-500">
+                                {{ loan.created_at.strftime('%d %b %Y') }}
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="p-4">
+
+                                {% if loan.status == 'Pending' %}
+
+                                <div class="flex gap-2">
+
+                                    <a href="{{ url_for('admin.approve_loan', id=loan.id) }}"
+                                       class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg text-sm">
+
+                                        Approve
+
+                                    </a>
+
+                                    <a href="{{ url_for('admin.reject_loan', id=loan.id) }}"
+                                       class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg text-sm">
+
+                                        Reject
+
+                                    </a>
+
+                                </div>
+
+                                {% else %}
+
+                                <span class="text-gray-400 text-sm">
+                                    Action Completed
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="text-center py-20">
+
+                <h3 class="text-2xl font-semibold text-gray-500 mb-3">
+                    No Loan Applications Yet
+                </h3>
+
+                <p class="text-gray-400">
+                    Loan requests from members will appear here.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

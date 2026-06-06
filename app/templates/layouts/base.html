@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NAATCOOPS{% endblock %} — Cooperative Savings & Loans</title>
+  <meta name="description" content="NAATCOOPS — Empowering members with secure savings, transparent loan management, and cooperative financial growth.">
+
+  <!-- Tailwind -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --forest:       #0d2b1a;
+      --forest-mid:   #153525;
+      --emerald:      #1a5c35;
+      --green:        #2d8653;
+      --mint:         #4caf80;
+      --gold:         #c9a84c;
+      --gold-light:   #e8c97a;
+      --gold-pale:    #f5e9c8;
+      --cream:        #f5f0e8;
+      --warm-white:   #fdfaf5;
+      --slate-dk:     #1c2b38;
+      --slate-mid:    #3d5168;
+      --slate-lt:     #6b7a8d;
+      --border:       rgba(14,43,26,0.1);
+      --shadow-sm:    0 2px 8px rgba(14,43,26,0.07);
+      --shadow-md:    0 8px 32px rgba(14,43,26,0.1);
+      --shadow-lg:    0 20px 60px rgba(14,43,26,0.14);
+      --nav-h:        72px;
+    }
+
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--slate-dk);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ══════════════════════════════
+       NAVBAR
+    ══════════════════════════════ */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: var(--nav-h);
+      background: rgba(13,43,26,0.97);
+      backdrop-filter: blur(20px) saturate(1.5);
+      -webkit-backdrop-filter: blur(20px) saturate(1.5);
+      border-bottom: 1px solid rgba(201,168,76,0.18);
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-inner {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold) 0%, #9a6b1e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--forest);
+      box-shadow: 0 4px 14px rgba(201,168,76,0.4);
+      flex-shrink: 0;
+    }
+
+    .nav-logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .nav-logo-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 18px;
+      color: #fff;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-logo-sub {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--gold-light);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* Nav links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .nav-links a.active {
+      color: var(--gold-light);
+      background: rgba(201,168,76,0.1);
+    }
+
+    .nav-links a .nav-icon {
+      font-size: 15px;
+      opacity: 0.8;
+    }
+
+    /* Nav divider */
+    .nav-divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(255,255,255,0.12);
+      flex-shrink: 0;
+    }
+
+    /* Nav CTA buttons */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .btn-nav-ghost {
+      padding: 9px 20px;
+      border-radius: 9px;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.85);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-nav-ghost:hover {
+      border-color: rgba(255,255,255,0.35);
+      color: #fff;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .btn-nav-primary {
+      padding: 9px 20px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--gold) 0%, #a87b2e 100%);
+      color: var(--forest);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(201,168,76,0.3);
+    }
+    .btn-nav-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(201,168,76,0.45);
+    }
+
+    /* Mobile hamburger */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255,255,255,0.07);
+      transition: background 0.2s;
+    }
+    .nav-hamburger:hover { background: rgba(255,255,255,0.12); }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile drawer */
+    .nav-mobile-drawer {
+      position: fixed;
+      top: var(--nav-h);
+      left: 0; right: 0;
+      background: var(--forest);
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      padding: 20px 24px 28px;
+      transform: translateY(-110%);
+      opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), opacity 0.25s;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .nav-mobile-drawer.open {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .nav-mobile-drawer a {
+      padding: 14px 16px;
+      border-radius: 10px;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+    .nav-mobile-drawer a:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    .nav-mobile-drawer .mobile-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 8px 0;
+    }
+    .nav-mobile-drawer .mobile-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .nav-mobile-drawer .mobile-actions a {
+      flex: 1;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .nav-mobile-drawer .mobile-actions .btn-nav-primary {
+      padding: 14px 16px;
+      border-radius: 10px;
+      text-align: center;
+      display: block;
+    }
+    .nav-mobile-drawer .mobile-actions .btn-nav-ghost {
+      padding: 14px 16px;
+      border-radius: 10px;
+      text-align: center;
+      display: block;
+    }
+
+    /* ══════════════════════════════
+       FLASH MESSAGES
+    ══════════════════════════════ */
+    .flash-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 40px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .flash {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.5;
+      position: relative;
+      animation: flashIn 0.4s cubic-bezier(0.23,1,0.32,1) both;
+    }
+
+    @keyframes flashIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .flash-icon { font-size: 18px; flex-shrink: 0; }
+
+    .flash-close {
+      margin-left: auto;
+      background: none;
+      border: none;
+      cursor: pointer;
+      opacity: 0.5;
+      font-size: 18px;
+      line-height: 1;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: opacity 0.2s;
+      color: inherit;
+      flex-shrink: 0;
+    }
+    .flash-close:hover { opacity: 1; }
+
+    .flash-success {
+      background: #edf7f1;
+      border: 1px solid #a7dcc0;
+      color: #1a5c35;
+    }
+    .flash-error, .flash-danger {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+    }
+    .flash-warning {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      color: #92400e;
+    }
+    .flash-info {
+      background: #eff6ff;
+      border: 1px solid #93c5fd;
+      color: #1e40af;
+    }
+
+    /* ══════════════════════════════
+       MAIN CONTENT WRAPPER
+    ══════════════════════════════ */
+    .page-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Inner wrapper for non-full-bleed pages */
+    .content-shell {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
+    .footer {
+      background: var(--forest);
+      border-top: 1px solid rgba(201,168,76,0.2);
+      padding: 64px 40px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      bottom: -60px; right: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 32px;
+    }
+
+    /* Footer brand column */
+    .footer-brand {}
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      margin-bottom: 18px;
+    }
+
+    .footer-logo-mark {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--gold), #9a6b1e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 16px;
+      color: var(--forest);
+      flex-shrink: 0;
+    }
+
+    .footer-logo-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-tagline {
+      color: rgba(255,255,255,0.45);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+      max-width: 280px;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 10px;
+    }
+
+    .footer-social-btn {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      text-decoration: none;
+      transition: all 0.2s;
+      color: rgba(255,255,255,0.6);
+    }
+    .footer-social-btn:hover {
+      background: rgba(201,168,76,0.15);
+      border-color: rgba(201,168,76,0.3);
+      color: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    /* Footer columns */
+    .footer-col {}
+
+    .footer-col-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 18px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      margin: 0; padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col ul a {
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .footer-col ul a:hover { color: rgba(255,255,255,0.9); }
+    .footer-col ul a::before {
+      content: '→';
+      font-size: 11px;
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: all 0.2s;
+    }
+    .footer-col ul a:hover::before {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Footer bottom bar */
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-copy {
+      color: rgba(255,255,255,0.35);
+      font-size: 13px;
+    }
+
+    .footer-copy span {
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal a {
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: rgba(255,255,255,0.7); }
+
+    /* ══════════════════════════════
+       PAGE TRANSITION OVERLAY
+    ══════════════════════════════ */
+    .page-loader {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--mint), var(--gold));
+      background-size: 200% 100%;
+      z-index: 9999;
+      animation: loaderSlide 0.5s ease forwards, loaderShimmer 1.5s linear infinite;
+      transform-origin: left;
+    }
+    @keyframes loaderSlide {
+      from { transform: scaleX(0); opacity: 1; }
+      to   { transform: scaleX(1); opacity: 0; }
+    }
+    @keyframes loaderShimmer {
+      from { background-position: 0% 0%; }
+      to   { background-position: 200% 0%; }
+    }
+
+    /* ══════════════════════════════
+       SCROLLBAR
+    ══════════════════════════════ */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--warm-white); }
+    ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--emerald); }
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media (max-width: 1024px) {
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+    }
+
+    @media (max-width: 768px) {
+      .navbar-inner { padding: 0 20px; }
+      .nav-links, .nav-divider, .nav-actions { display: none; }
+      .nav-hamburger { display: flex; }
+      .flash-container { padding: 16px 20px 0; }
+      .content-shell { padding: 28px 20px 60px; }
+      .footer { padding: 48px 20px 28px; }
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
+    }
+  </style>
+
+  {% block head %}{% endblock %}
+</head>
+
+<body>
+
+<!-- Page load indicator -->
+<div class="page-loader" id="pageLoader"></div>
+
+<!-- ═══════ NAVBAR ═══════ -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar-inner">
+
+    <!-- Logo -->
+    <a href="{{ url_for('auth.home') }}" class="nav-logo" aria-label="NAATCOOPS Home">
+      <div class="nav-logo-mark">N</div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-name">NAATCOOPS</span>
+        <span class="nav-logo-sub">Cooperative Society</span>
+      </div>
+    </a>
+
+    <!-- Desktop links — customise as needed -->
+    <ul class="nav-links" role="list">
+      <li><a href="{{ url_for('auth.home') }}" class="{% if request.endpoint == 'main.index' %}active{% endif %}">
+        <span class="nav-icon">🏠</span> Home
+      </a></li>
+      <li><a href="{{ url_for('auth.login') }}" class="{% if request.endpoint == 'auth.login' %}active{% endif %}">
+        <span class="nav-icon">📊</span> Dashboard
+      </a></li>
+      <li><a href="#" class="{% if request.endpoint == 'savings' %}active{% endif %}">
+        <span class="nav-icon">💰</span> Savings
+      </a></li>
+      <li><a href="#" class="{% if request.endpoint == 'loans' %}active{% endif %}">
+        <span class="nav-icon">🏦</span> Loans
+      </a></li>
+    </ul>
+
+    <div class="nav-divider"></div>
+
+    <!-- Desktop CTA -->
+    <div class="nav-actions">
+      <a href="{{ url_for('auth.login') }}" class="btn-nav-ghost">Sign In</a>
+      <a href="{{ url_for('auth.register') }}" class="btn-nav-primary">Join Now ↗</a>
+    </div>
+
+    <!-- Mobile hamburger -->
+    <button class="nav-hamburger" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+  </div>
+</nav>
+
+<!-- Mobile drawer -->
+<div class="nav-mobile-drawer" id="mobileDrawer" aria-hidden="true">
+  <a href="{{ url_for('auth.home') }}"><span>🏠</span> Home</a>
+  <a href="{{ url_for('auth.login') }}"><span>📊</span> Dashboard</a>
+  <a href="#"><span>💰</span> Savings</a>
+  <a href="#"><span>🏦</span> Loans</a>
+  <div class="mobile-divider"></div>
+  <div class="mobile-actions">
+    <a href="{{ url_for('auth.login') }}" class="btn-nav-ghost">Sign In</a>
+    <a href="{{ url_for('auth.register') }}" class="btn-nav-primary">Join Now ↗</a>
+  </div>
+</div>
+
+<!-- ═══════ FLASH MESSAGES ═══════ -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container" role="alert" aria-live="polite">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">
+          <span class="flash-icon">
+            {% if category == 'success' %}✅
+            {% elif category in ['error', 'danger'] %}❌
+            {% elif category == 'warning' %}⚠️
+            {% else %}ℹ️
+            {% endif %}
+          </span>
+          <span>{{ message }}</span>
+          <button class="flash-close" onclick="this.parentElement.remove()" aria-label="Dismiss">✕</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- ═══════ MAIN CONTENT ═══════ -->
+<main class="page-content" id="main-content">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-inner">
+
+    <div class="footer-top">
+
+      <!-- Brand column -->
+      <div class="footer-brand">
+        <a href="{{ url_for('auth.home') }}" class="footer-logo">
+          <div class="footer-logo-mark">N</div>
+          <span class="footer-logo-name">NAATCOOPS</span>
+        </a>
+        <p class="footer-tagline">
+          Empowering members through secure savings, affordable loans, and
+          community-driven financial growth since day one.
+        </p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social-btn" aria-label="Facebook">𝑓</a>
+          <a href="#" class="footer-social-btn" aria-label="Twitter">𝕏</a>
+          <a href="#" class="footer-social-btn" aria-label="Instagram">◈</a>
+          <a href="#" class="footer-social-btn" aria-label="WhatsApp">✆</a>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="footer-col">
+        <div class="footer-col-title">Quick Links</div>
+        <ul>
+          <li><a href="{{ url_for('auth.home') }}">Home</a></li>
+          <li><a href="{{ url_for('auth.login') }}">Member Login</a></li>
+          <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div class="footer-col">
+        <div class="footer-col-title">Services</div>
+        <ul>
+          <li><a href="#">Savings</a></li>
+          <li><a href="#">Loans</a></li>
+          <li><a href="#">Financial Tracking</a></li>
+          <li><a href="#">Announcements</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="footer-col">
+        <div class="footer-col-title">Contact</div>
+        <ul>
+          <li><a href="mailto:info@naatcoops.org">📧 info@naatcoops.org</a></li>
+          <li><a href="tel:+234">📞 +234 000 000 0000</a></li>
+          <li><a href="#">📍 Lagos, Nigeria</a></li>
+          <li><a href="#">💬 Support Chat</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <p class="footer-copy">
+        &copy; {{ now.year if now else '2025' }} <span>NAATCOOPS</span>. All rights reserved.
+      </p>
+      <nav class="footer-legal" aria-label="Legal links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Cookie Policy</a>
+      </nav>
+    </div>
+
+  </div>
+</footer>
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+  // Page loader
+  window.addEventListener('load', () => {
+    const loader = document.getElementById('pageLoader');
+    if (loader) loader.style.display = 'none';
+  });
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const mobileDrawer = document.getElementById('mobileDrawer');
+
+  navToggle?.addEventListener('click', () => {
+    const isOpen = navToggle.classList.toggle('open');
+    mobileDrawer.classList.toggle('open', isOpen);
+    navToggle.setAttribute('aria-expanded', isOpen);
+    mobileDrawer.setAttribute('aria-hidden', !isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // Close drawer on outside click
+  document.addEventListener('click', (e) => {
+    if (!navToggle?.contains(e.target) && !mobileDrawer?.contains(e.target)) {
+      navToggle?.classList.remove('open');
+      mobileDrawer?.classList.remove('open');
+      navToggle?.setAttribute('aria-expanded', 'false');
+      mobileDrawer?.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Auto-dismiss flash messages after 5s
+  document.querySelectorAll('.flash').forEach((flash, i) => {
+    setTimeout(() => {
+      flash.style.transition = 'opacity 0.4s, transform 0.4s';
+      flash.style.opacity = '0';
+      flash.style.transform = 'translateY(-8px)';
+      setTimeout(() => flash.remove(), 400);
+    }, 5000 + i * 500);
+  });
+
+  // Navbar scroll shadow
+  const navbar = document.querySelector('.navbar');
+  window.addEventListener('scroll', () => {
+    navbar?.classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
+</script>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

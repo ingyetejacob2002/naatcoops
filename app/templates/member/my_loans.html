@@ -1,0 +1,273 @@
+{% extends 'layouts/member_base.html' %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="mb-8">
+
+    <h1 class="text-4xl font-bold text-green-900 mb-2">
+        🏦 My Loans
+    </h1>
+
+    <p class="text-gray-500">
+        View and track all your loan applications and statuses.
+    </p>
+
+</div>
+
+<!-- Loan Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+    <!-- Total Loans -->
+    <div class="bg-white rounded-2xl shadow-lg p-8">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-gray-500 mb-2">
+                    Total Loans
+                </p>
+
+                <h2 class="text-4xl font-bold text-green-800">
+                    {{ loans|length }}
+                </h2>
+
+            </div>
+
+            <div class="bg-green-100 p-4 rounded-full">
+
+                <i class="fa-solid fa-money-bill-wave text-3xl text-green-800"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Approved Loans -->
+    <div class="bg-white rounded-2xl shadow-lg p-8">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-gray-500 mb-2">
+                    Approved
+                </p>
+
+                <h2 class="text-4xl font-bold text-green-700">
+                    {{ approved_count }}
+                </h2>
+
+            </div>
+
+            <div class="bg-green-100 p-4 rounded-full">
+
+                <i class="fa-solid fa-circle-check text-3xl text-green-700"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Pending Loans -->
+    <div class="bg-white rounded-2xl shadow-lg p-8">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-gray-500 mb-2">
+                    Pending
+                </p>
+
+                <h2 class="text-4xl font-bold text-yellow-600">
+                    {{ pending_count }}
+                </h2>
+
+            </div>
+
+            <div class="bg-yellow-100 p-4 rounded-full">
+
+                <i class="fa-solid fa-clock text-3xl text-yellow-600"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Loan Table -->
+<div class="bg-white rounded-2xl shadow-lg p-8">
+
+    <div class="flex justify-between items-center mb-8">
+
+        <h2 class="text-3xl font-bold">
+            Loan History
+        </h2>
+
+        <a href="{{ url_for('member.apply_loan') }}"
+           class="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-xl transition duration-300">
+
+            Apply New Loan
+
+        </a>
+
+    </div>
+
+    {% if loans %}
+
+    <div class="overflow-x-auto">
+
+        <table class="w-full border-collapse">
+
+            <!-- Table Header -->
+            <thead>
+
+                <tr class="bg-green-900 text-white">
+
+                    <th class="p-4 text-left">
+                        Amount
+                    </th>
+
+                    <th class="p-4 text-left">
+                        Duration
+                    </th>
+
+                    <th class="p-4 text-left">
+                        Reason
+                    </th>
+
+                    <th class="p-4 text-left">
+                        Status
+                    </th>
+
+                    <th class="p-4 text-left">
+                        Date Applied
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <!-- Table Body -->
+            <tbody>
+
+                {% for loan in loans %}
+
+                <tr class="border-b hover:bg-gray-50">
+
+                    <!-- Amount -->
+                    <td class="p-4 font-semibold text-green-700">
+
+                        ₦{{ "{:,.2f}".format(loan.amount) }}
+
+                    </td>
+
+                    <!-- Duration -->
+                    <td class="p-4">
+
+                        {{ loan.duration }}
+
+                    </td>
+
+                    <!-- Reason -->
+                    <td class="p-4">
+
+                        <div class="max-w-xs truncate">
+
+                            {{ loan.reason }}
+
+                        </div>
+
+                    </td>
+
+                    <!-- Status -->
+                    <td class="p-4">
+
+                        {% if loan.status == 'Pending' %}
+
+                            <span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">
+
+                                Pending
+
+                            </span>
+
+                        {% elif loan.status == 'Approved' %}
+
+                            <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+
+                                Approved
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium">
+
+                                Rejected
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <!-- Date -->
+                    <td class="p-4 text-gray-500 text-sm">
+
+                        {{ loan.created_at.strftime('%d %b %Y') }}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <!-- Empty State -->
+    <div class="text-center py-20">
+
+        <div class="mb-6">
+
+            <i class="fa-solid fa-money-bill-wave text-7xl text-gray-300"></i>
+
+        </div>
+
+        <h2 class="text-3xl font-bold text-gray-500 mb-4">
+
+            No Loans Yet
+
+        </h2>
+
+        <p class="text-gray-400 text-lg mb-8">
+
+            You have not applied for any loans yet.
+
+        </p>
+
+        <a href="{{ url_for('member.apply_loan') }}"
+           class="bg-green-700 hover:bg-green-800 text-white px-8 py-4 rounded-xl transition duration-300">
+
+            Apply for Loan
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
